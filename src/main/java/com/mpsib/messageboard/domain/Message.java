@@ -23,7 +23,9 @@ public class Message {
 	@JoinColumn(name = "userid")
 	private User user;
 	
-	public Message() {}
+	public Message() {
+		this.timestamp = new Timestamp(System.currentTimeMillis());
+	}
 
 	public Message(Timestamp timestamp, String messageContent, Topic topic, User user) {
 		super();

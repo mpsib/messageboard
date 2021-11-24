@@ -1,8 +1,11 @@
 package com.mpsib.messageboard.web;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +18,7 @@ import com.mpsib.messageboard.domain.Message;
 import com.mpsib.messageboard.domain.MessageRepository;
 import com.mpsib.messageboard.domain.Topic;
 import com.mpsib.messageboard.domain.TopicRepository;
+import com.mpsib.messageboard.domain.UserRepository;
 
 @Controller
 public class MessageBoardController {
@@ -22,6 +26,8 @@ public class MessageBoardController {
 	private MessageRepository messageRepository;
 	@Autowired
 	private TopicRepository topicRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	@RequestMapping(value="/login")
 	public String login() {
@@ -34,10 +40,11 @@ public class MessageBoardController {
 		return (List<Topic>)topicRepository.findAll();
 	}
 	
+	/*
 	@GetMapping("/topics/{id}/messages")
 	public @ResponseBody List<Message> restListMessagesByTopicId(@PathVariable("id") Long id){
 		return (List<Message>)messageRepository.findByTopic(id);
-	}
+	}*/
 	
 	//TODO messages by user
 	
@@ -51,9 +58,22 @@ public class MessageBoardController {
 	
 	@GetMapping("/topic/{id}")
 	public String listMessagesOfTopic(@PathVariable("id") Long topicId, Model model) {
-		model.addAttribute("messages", messageRepository.findByTopic(topicId));
+		model.addAttribute("messages", messageRepository.findByTopicId(topicId));
+		model.addAttribute("id", topicId);
 		return "topic";
 	}
+	
+	@PostMapping("/topic/{id}")
+	public String sendMessage(String messageText, Long id) {
+		Message message = new Message();
+		message.setMessageContent(messageText);
+		message.setTopic(topicRepository.findById(id).get());
+		UserDetails ud = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		message.setUser(userRepository.findByUsername(ud.getUsername()));
+		messageRepository.save(message);
+		return "redirect:/topic/{id}";
+	}
+	
 	
 	@GetMapping("/newtopic")
 	public String newTopicPage(Model model) {
@@ -63,6 +83,7 @@ public class MessageBoardController {
 	
 	@PostMapping("/newtopic")
 	public String addNewTopic(Topic topic) {
+		topic.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		topicRepository.save(topic);
 		return "redirect:/";
 	}

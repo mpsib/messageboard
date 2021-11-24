@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 public interface MessageRepository extends CrudRepository<Message, Long>{
-	List<Message> findByTopic(Long TopicId);
-	List<Message> findByUser(Long UserId);
+	List<Message> findByTopicId(Long topicId);
+	List<Message> findByUser(Long userId);
 
 }
