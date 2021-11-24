@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<title>Message Board</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+	<h1>Sign up to Message Board</h1>
+	
+	
+	<form action="#" th:action="@{/signup}" method="post" th:object="${newuser}">         
+	    
+	    <p>  
+	        <label for="username">Username</label>  
+	        <input type="text" id="username" name="username" required th:field="*{username}"/>      
+	    </p>  
+	    <p>  
+	        <label for="password">Password</label>  
+	        <input type="password" id="password" name="password" required th:field="*{password}"/>      
+	    </p>  
+	    <!-- <input type="hidden"                          
+	        name="${_csrf.parameterName}"  
+	        value="${_csrf.token}"/>  -->
+	    <button type="submit" class="btn btn-success">Sign Up</button>  
+	</form>
+	<a class="btn " href="/">Cancel</a>
+	
+</body>
+</html>

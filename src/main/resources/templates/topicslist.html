@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<title>Message Board</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+	<h1>Message Board</h1>
+		<div th:if="${param.reg != null}">
+		  <p>
+		  	New user created, please log in.
+	      </p>  
+		</div>
+		<div sec:authorize="isAuthenticated()">
+			<h3 th:inline="text">Signed in as [[${#httpServletRequest.remoteUser}]]</h3>
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Log Out" class="btn btn-sm "/>
+			</form>
+		</div>
+		<div sec:authorize="isAnonymous()"> 
+			<h3 th:inline="text">Not signed in</h3>
+			<form th:action="@{/login}" method="get">
+				<input type="submit" value="Log In or Sign Up" class="btn btn-sm "/>
+			</form>
+		</div>
+	<table class="table table-striped">
+		<tr>
+			<th>Topic</th>
+			<th>Author</th>
+			<th>Created At</th>
+			<th sec:authorize="hasAuthority('ADMIN')"></th>
+		</tr>
+		<tr th:each="topic : ${topics}">
+			<td>
+				<a th:text="${topic.topicTitle}">topic</a>
+			</td>
+			<td th:text="${topic.user.username}">user</td>
+			<td th:text="${topic.timestamp}">timestamp</td>
+			<td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger" th:href="@{/delete/{id}(id=${topic.id})}">Delete</a></td>
+		</tr>
+	</table>
+	<div sec:authorize="isAuthenticated()">
+		<a class="btn btn-success" href="/newtopic">Create New Topic</a>
+	</div>
+	
+	
+</body>
+</html>

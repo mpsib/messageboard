@@ -29,6 +29,9 @@ public class User {
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private List<Message> messages;
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	private List<Topic> topics;
 	
 	public User() {}
 	
@@ -47,13 +50,14 @@ public class User {
 		this.role = role;
 	}
 
-	public User(Long id, String username, String passwordHash, String role, List<Message> messages) {
+	public User(Long id, String username, String passwordHash, String role, List<Message> messages, List<Topic> topics) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.passwordHash = passwordHash;
 		this.role = role;
 		this.messages = messages;
+		this.topics = topics;
 	}
 
 	public Long getId() {
@@ -94,6 +98,14 @@ public class User {
 
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
+	}
+
+	public List<Topic> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<Topic> topics) {
+		this.topics = topics;
 	}
 	
 	

@@ -31,6 +31,9 @@ public class MessageboardApplication {
 			TopicRepository topicRepository,
 			MessageRepository messageRepository) {
 		return (args) -> {
+			//Usernames are UNIQUE, so you must deleteAll in Heroku. For example urepository.deleteAll() in your CommandLineRunner.
+			userRepository.deleteAll();
+			
 			User user1 = new User("u1", "$2a$10$8RlLO1MZmOA3pgUI7iq1i.8Qld7/DrBFaNWaRe2l1f84GhNs8F0J2", "USER");
 			User user2 = new User("u2", "$2a$10$8RlLO1MZmOA3pgUI7iq1i.8Qld7/DrBFaNWaRe2l1f84GhNs8F0J2", "USER");
 			User admin1 = new User("admin", "$2a$10$SUx2Q1/z5Kfn60CdIw5.ouj4o.z1dvS2TRXL4z/uhTFq8BWXPUiBe", "ADMIN");
@@ -44,6 +47,8 @@ public class MessageboardApplication {
 			
 			Topic t1 = new Topic("Test topic 1", testTime1);
 			Topic t2 = new Topic("Test topic 2", testTime2);
+			t1.setUser(user1);
+			t2.setUser(user2);
 			topicRepository.save(t1);
 			topicRepository.save(t2);
 			

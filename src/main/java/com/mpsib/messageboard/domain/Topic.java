@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,8 +24,13 @@ public class Topic {
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "topic")
 	private List<Message> messages;
+	@ManyToOne
+	@JoinColumn(name = "userid")
+	private User user;
 	
-	public Topic () {}
+	public Topic () {
+		this.timestamp = new Timestamp(System.currentTimeMillis());
+	}
 
 	public Topic(String topicTitle, Timestamp timestamp) {
 		super();
@@ -38,12 +45,13 @@ public class Topic {
 		this.timestamp = timestamp;
 	}
 
-	public Topic(Long id, String topicTitle, Timestamp timestamp, List<Message> messages) {
+	public Topic(Long id, String topicTitle, Timestamp timestamp, List<Message> messages, User user) {
 		super();
 		this.id = id;
 		this.topicTitle = topicTitle;
 		this.timestamp = timestamp;
 		this.messages = messages;
+		this.user = user;
 	}
 
 	public Long getId() {
@@ -77,6 +85,16 @@ public class Topic {
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	
 	
 	
 }

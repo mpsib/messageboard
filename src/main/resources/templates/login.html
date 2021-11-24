@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<title>Message Board</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+	<h1>Log In to Message Board</h1>
+	
+	
+	<form action="#" th:action="@{/login}" method="post">         
+	    <div th:if="${param.error != null}">
+		  <p>
+		  	Invalid username and password.
+	      </p>  
+		</div>
+		<div th:if="${param.logout != null}">
+		  <p>
+		  	You have been logged out.
+	      </p>  
+		</div> 
+	    <p>  
+	        <label for="username">Username</label>  
+	        <input type="text" id="username" name="username"/>      
+	    </p>  
+	    <p>  
+	        <label for="password">Password</label>  
+	        <input type="password" id="password" name="password"/>      
+	    </p>  
+	    <input type="hidden"                          
+	        name="${_csrf.parameterName}"  
+	        value="${_csrf.token}"/>  
+	    <button type="submit" class="btn btn-success">Log in</button>  
+	</form>
+	<form th:action="@{/signup}" method="get">
+		<input type="submit" value="Go to Sign Up" class="btn btn-sm "/>
+	</form>
+	<a class="btn " href="/">Cancel</a>
+	
+</body>
+</html>
