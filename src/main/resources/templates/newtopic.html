@@ -26,30 +26,21 @@
 	<a class="btn btn-info" href="/">Back</a>
 	<table class="table table-striped">
 		<tr>
-			<th>User</th>
-			<th>Timestamp</th>
-			<th>Message</th>
-			<th sec:authorize="hasAuthority('ADMIN')"></th>
+			<th>Create new topic</th>
 		</tr>
-		<tr th:each="message : ${messages}">
-			<td th:text="${message.user.username}">user</td>
-			<td th:text="${message.timestamp}">timestamp</td>
-			<td th:text="${message.messageContent}">message</td>
-			<td 
-				sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
-				th:href="@{/topic/{id}/delete/{messageId}(id=${id}, messageId=${message.id})}">Delete</a>
+		<tr>
+			<td>
+				<div sec:authorize="isAuthenticated()">
+					<form action="#" th:action="@{/newtopic}" method="post">
+						<input type="text" th:value="${topicName}" autofocus name="topicName" />
+						<p>
+							<input class="btn btn-success" type="submit" value="Submit" />
+						</p>
+					</form>
+				</div>
 			</td>
 		</tr>
 	</table>
-	<div sec:authorize="isAuthenticated()">
-		<form action="#" th:action="@{/topic/{topicid}(topicid=${id})}" method="post">
-			<input type="text" th:value="${messageText}" autofocus name="messageText" />
-			<p>
-				<input type="hidden" th:value="${id}" name="id" />
-				<input class="btn btn-success" type="submit" value="Submit" />
-			</p>
-		</form>
-	</div>
 	
 	<a class="btn btn-info" href="/">Back</a>
 </body>

@@ -24,7 +24,7 @@
 		</div> 
 	    <p>  
 	        <label for="username">Username</label>  
-	        <input type="text" id="username" name="username"/>      
+	        <input type="text" id="username" autofocus name="username"/>      
 	    </p>  
 	    <p>  
 	        <label for="password">Password</label>  
@@ -38,7 +38,7 @@
 	<form th:action="@{/signup}" method="get">
 		<input type="submit" value="Go to Sign Up" class="btn btn-sm "/>
 	</form>
-	<a class="btn " href="/">Cancel</a>
+	<a class="btn btn-info" href="/">Cancel</a>
 	
 </body>
 </html>

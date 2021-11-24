@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<title>Message Board</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+	<h1>Message Board</h1>
+	
+	<div sec:authorize="isAuthenticated()">
+		<h3 th:inline="text">Signed in as [[${#httpServletRequest.remoteUser}]]</h3>
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Log Out" class="btn btn-sm "/>
+		</form>
+	</div>
+	
+	<a class="btn btn-info" href="/">Back</a>
+	
+	<table class="table table-striped">
+		<tr>
+			<th>Edit Topic Name</th>
+		</tr>
+		<tr>
+			<td>
+				<div sec:authorize="isAuthenticated()">
+					<form action="#" th:action="@{/topic/edit/{topicid}(topicid=${id})}" method="post" >
+						<input type="text" th:value="${topicTitle}" name="topicTitle" autofocus />
+						<p>
+							<input type="hidden" th:field="${id}" name="id" />
+							<input class="btn btn-success" type="submit" value="Submit" />
+						</p>
+					</form>
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+	<a class="btn btn-info" href="/">Back</a>
+</body>
+</html>

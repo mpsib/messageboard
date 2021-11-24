@@ -22,8 +22,10 @@ public class User {
 	private Long id;
 	@Column(name = "username", nullable = false, unique = true)
 	private String username;
+	@JsonIgnore
 	@Column(name = "password", nullable = false)
 	private String passwordHash;
+	@JsonIgnore
 	@Column(name = "role", nullable = false)
 	private String role;
 	@JsonIgnore

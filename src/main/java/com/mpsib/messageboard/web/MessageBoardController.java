@@ -1,9 +1,9 @@
 package com.mpsib.messageboard.web;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -40,13 +40,11 @@ public class MessageBoardController {
 		return (List<Topic>)topicRepository.findAll();
 	}
 	
-	/*
-	@GetMapping("/topics/{id}/messages")
-	public @ResponseBody List<Message> restListMessagesByTopicId(@PathVariable("id") Long id){
-		return (List<Message>)messageRepository.findByTopic(id);
-	}*/
 	
-	//TODO messages by user
+	@GetMapping("/topics/{id}")
+	public @ResponseBody List<Message> restListMessagesByTopicId(@PathVariable("id") Long topicId){
+		return (List<Message>)messageRepository.findByTopicId(topicId);
+	}
 	
 	
 	//Template views
@@ -82,9 +80,44 @@ public class MessageBoardController {
 	}
 	
 	@PostMapping("/newtopic")
-	public String addNewTopic(Topic topic) {
-		topic.setTimestamp(new Timestamp(System.currentTimeMillis()));
+	public String addNewTopic(String topicName) {
+		Topic topic = new Topic();
+		topic.setTopicTitle(topicName);
+		UserDetails ud = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		topic.setUser(userRepository.findByUsername(ud.getUsername()));
 		topicRepository.save(topic);
 		return "redirect:/";
+	}
+	
+	@GetMapping("/topic/edit/{id}")
+	public String editTopic(@PathVariable("id") Long topicId, Model model) {
+		Topic topic = topicRepository.findById(topicId).get();
+		model.addAttribute("topicTitle", topic.getTopicTitle());
+		model.addAttribute("id", topicId);
+		
+		return "editTopic";
+	}
+	
+	@PostMapping("/topic/edit/{id}")
+	public String editTopicSave(@PathVariable("id") Long topicId, String topicTitle) {
+		Topic topic = topicRepository.findById(topicId).get();
+		topic.setTopicTitle(topicTitle);
+		topicRepository.save(topic);
+		return "redirect:/";
+	}
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@RequestMapping("/topic/delete/{id}")
+	public String deleteTopic(@PathVariable("id") Long topicId, Model model) {
+		topicRepository.deleteById(topicId);
+		return "redirect:/";
+	}
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@RequestMapping("/topic/{id}/delete/{messageId}")
+	public String deleteMessage(@PathVariable("id") Long topicId, @PathVariable("messageId") Long messageId, Model model) {
+		messageRepository.deleteById(messageId);
+		String url = "redirect:/topic/"+topicId;
+		return url;
 	}
 }

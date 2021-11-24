@@ -28,17 +28,19 @@
 	</div>
 	<table class="table table-striped">
 		<tr>
-			<th>Topic</th>
-			<th>Author</th>
+			<th>Creator</th>
 			<th>Created At</th>
+			<th>Topic</th>
+			<th sec:authorize="hasAuthority('ADMIN')"></th>
 			<th sec:authorize="hasAuthority('ADMIN')"></th>
 		</tr>
 		<tr th:each="topic : ${topics}">
+			<td th:text="${topic.user.username}">user</td>
+			<td th:text="${topic.timestamp}">timestamp</td>
 			<td>
 				<a th:href="@{/topic/{id}(id=${topic.id})}" th:text="${topic.topicTitle}">topic</a>
 			</td>
-			<td th:text="${topic.user.username}">user</td>
-			<td th:text="${topic.timestamp}">timestamp</td>
+			<td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-primary" th:href="@{/topic/edit/{id}(id=${topic.id})}">Edit</a></td>
 			<td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger" th:href="@{/topic/delete/{id}(id=${topic.id})}">Delete</a></td>
 		</tr>
 	</table>
